@@ -4,10 +4,16 @@ import { Carousel } from "react-bootstrap";
 import Navbar from "../Landing/Navbar";
 import Footer from "../Landing/Footer";
 import "./Details.css";
+import Booking from "./Booking";
 
 function CarDetails() {
   const [carDetails, setCarDetails] = useState(null);
   const [showTerms, setShowTerms] = useState(false);
+  const [showBooking, setShowBooking] = useState(false);
+
+  const toggleBooking = () => {
+    setShowBooking(!showBooking);
+  };
 
   useEffect(() => {
     const dummyData = {
@@ -71,7 +77,9 @@ function CarDetails() {
               {carouselItems}
             </Carousel>
             <div className="text-center mt-3 ">
-              <button className="btn btn-primary mx-2">Book Now</button>
+              <button className="btn btn-primary mx-2" onClick={toggleBooking}>
+                Book Now
+              </button>
               <button className="btn btn-primary mx-2">Add To Cart</button>
             </div>
             <div className="text-center mt-3">
@@ -107,6 +115,28 @@ function CarDetails() {
                 </div>
               </div>
             )}
+            <div className="text-center">
+              {showBooking && (
+                <div className="booking-modal">
+                  <div className="booking-modal-content">
+                    <button
+                      style={{
+                        position: "absolute",
+                        top: "10px",
+                        right: "10px",
+                        border: "none",
+                        backgroundColor: "transparent",
+                        cursor: "pointer",
+                      }}
+                      onClick={toggleBooking}
+                    >
+                      X
+                    </button>
+                    <Booking />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="col-md-6">

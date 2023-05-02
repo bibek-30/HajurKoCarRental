@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
 import carImage from "../../assets/carImage.png";
 
 const Hero = () => {
@@ -47,12 +49,14 @@ const Hero = () => {
           trips to family getaways, we've got you covered with our variety of
           travel options.
         </p>
-        <button
+        <Link
+          to={"/car"}
           style={{
             marginTop: "2rem",
             padding: "1rem 2rem",
             fontSize: "1.8rem",
             backgroundColor: "#fff",
+            textDecoration: "none",
             color: "#333",
             border: "none",
             borderRadius: "5px",
@@ -70,7 +74,7 @@ const Hero = () => {
           }}
         >
           Book Now
-        </button>
+        </Link>
       </div>
     </div>
   );
