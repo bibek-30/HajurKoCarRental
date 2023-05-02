@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Carousel } from "react-bootstrap";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 import Navbar from "../Landing/Navbar";
 import Footer from "../Landing/Footer";
 import "./Details.css";
 import Booking from "./Booking";
 
-function CarDetails() {
+const CarDetails = () => {
+  const { id } = useParams();
+
   const [carDetails, setCarDetails] = useState(null);
   const [showTerms, setShowTerms] = useState(false);
   const [showBooking, setShowBooking] = useState(false);
@@ -16,49 +20,25 @@ function CarDetails() {
   };
 
   useEffect(() => {
-    const dummyData = {
-      make: "Tesla",
-      model: "Model S",
-      images: [
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpdorpLxWlzmX3XNKTlKB5jaHPlpzrOLbWRFpnWJfcocpu5eRclSIkh4vDhJFNBZVr_Ck&usqp=CAU",
-        "https://imgd-ct.aeplcdn.com/370x208/n/cw/ec/128413/scorpio-exterior-right-front-three-quarter-46.jpeg?isig=0&q=75",
-        "https://cdni.autocarindia.com/utils/imageresizer.ashx?n=https://cms.haymarketindia.net/model/uploads/modelimages/Hyundai-Grand-i10-Nios-200120231541.jpg&w=872&h=578&q=75&c=1",
-      ],
-      description:
-        "The Tesla Model S is a premium electric sedan with impressive acceleration and range.",
-      year: 2022,
-      color: "Red",
-      price: "$79,990",
-      vin: "5YJSA1DG9CFP01657",
-      currentMileage: "10,000",
-      features: [
-        "Autopilot advanced safety and convenience features",
-        "Premium interior and sound",
-        "High-efficiency particulate air (HEPA) filter system",
-      ],
-    };
-    setCarDetails(dummyData);
+    axios
+      .get("https://localhost:7279/api/Cars/2", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        console.log(response.data);
+        setCarDetails(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   if (!carDetails) {
     return <div>Loading car details...</div>;
   }
-
-  const carouselItems = carDetails.images.map((imageSrc, index) => (
-    <Carousel.Item key={index}>
-      <img
-        className="d-block w-100 car-details-image"
-        src={imageSrc}
-        alt={`${carDetails.make} ${carDetails.model}`}
-      />
-    </Carousel.Item>
-  ));
-
-  const featuresList = carDetails.features.map((feature, index) => (
-    <li key={index} className="car-details-feature">
-      {feature}
-    </li>
-  ));
 
   const handleShowTerms = () => {
     setShowTerms(true);
@@ -67,20 +47,25 @@ function CarDetails() {
   const handleCloseTerms = () => {
     setShowTerms(false);
   };
+
   return (
-    <div className="bg-dark ">
+    <div className="bg-dark">
       <Navbar />
       <div className="container my-5 car-details-container">
         <div className="row">
           <div className="col-md-6">
-            <Carousel interval={3000} pauseOnHover={false} fade={true}>
-              {carouselItems}
+            <Carousel controls={false}>
+              <img
+                className="d-block w-100"
+                src={carDetails.photo}
+                alt={carDetails.make + " " + carDetails.model}
+              />
             </Carousel>
+
             <div className="text-center mt-3 ">
               <button className="btn btn-primary mx-2" onClick={toggleBooking}>
                 Book Now
               </button>
-              <button className="btn btn-primary mx-2">Add To Cart</button>
             </div>
             <div className="text-center mt-3">
               <button
@@ -159,14 +144,10 @@ function CarDetails() {
                 <strong>Price :</strong> {carDetails.price} per Day
               </li>
               <li className="list-group-item car-details-item">
-                <strong>VIN:</strong> {carDetails.vin}
+                <strong>VIN:</strong> {carDetails.registration_number}
               </li>
               <li className="list-group-item car-details-item">
-                <strong>Current Mileage:</strong> {carDetails.currentMileage}
-              </li>
-              <li className="list-group-item car-details-item ">
-                <strong>Features:</strong>
-                <ul className="car-details-feature-list">{featuresList}</ul>
+                <strong>Current Mileage:</strong> {carDetails.mileage}
               </li>
             </ul>
           </div>
@@ -175,5 +156,5 @@ function CarDetails() {
       <Footer />
     </div>
   );
-}
+};
 export default CarDetails;

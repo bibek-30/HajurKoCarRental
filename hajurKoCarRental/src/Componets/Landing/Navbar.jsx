@@ -48,16 +48,7 @@ const Navbar = () => {
                 CarList
               </Link>
             </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/search">
-                Search
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/favorites">
-                Favorites
-              </a>
-            </li>
+
             <li className="nav-item dropdown">
               <a
                 className="nav-link dropdown-toggle"

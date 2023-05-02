@@ -1,82 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import "./Feed.css";
 import Navbar from "../Landing/Navbar";
 import Footer from "../Landing/Footer";
 import { Link } from "react-router-dom";
 
+import axios from "axios";
+
 const Feed = () => {
   const [search, setSearch] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-  const data = [
-    {
-      id: 1,
-      title: "First Feed",
-      price: 80000,
-      image: "https://via.placeholder.com/286x180.png",
-      description:
-        "Some quick example text to build on the card title and make up the bulk of the card's content.",
-    },
-    {
-      id: 2,
-      title: "Second Feed",
-      price: 8800,
-      image: "https://via.placeholder.com/286x180.png",
-      description:
-        "Another quick example text to build on the card title and make up the bulk of the card's content.",
-    },
-    {
-      id: 3,
-      title: "Third Feed",
-      price: 8000,
-      image: "https://via.placeholder.com/286x180.png",
-      description:
-        "A third example feed with some additional text to make up the bulk of the card's content.",
-    },
-    {
-      id: 4,
-      title: "Fourth Feed",
-      price: 80000,
-      image: "https://via.placeholder.com/286x180.png",
-      description:
-        "A fourth example feed with some additional text to make up the bulk of the card's content.",
-    },
-    {
-      id: 5,
-      title: "Fifth Feed",
-      price: 10000,
-      image: "https://via.placeholder.com/286x180.png",
-      description:
-        "A fifth example feed with some additional text to make up the bulk of the card's content.",
-    },
-    {
-      id: 6,
-      title: "Sixth Feed",
-      price: 11000,
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpdorpLxWlzmX3XNKTlKB5jaHPlpzrOLbWRFpnWJfcocpu5eRclSIkh4vDhJFNBZVr_Ck&usqp=CAU",
-      description:
-        "A sixth example feed with some additional text to make up the bulk of the card's content.",
-    },
-    {
-      id: 7,
-      title: "Seventh Feed",
-      price: 90000,
-      image:
-        "https://imgd-ct.aeplcdn.com/370x208/n/cw/ec/128413/scorpio-exterior-right-front-three-quarter-46.jpeg?isig=0&q=75",
-      description:
-        "A seventh example feed with some additional text to make up the bulk of the card's content.",
-    },
-    {
-      id: 8,
-      title: "Eighth Feed",
-      price: 10000,
-      image:
-        "https://cdni.autocarindia.com/utils/imageresizer.ashx?n=https://cms.haymarketindia.net/model/uploads/modelimages/Hyundai-Grand-i10-Nios-200120231541.jpg&w=872&h=578&q=75&c=1",
-      description:
-        "An eighth example feed with some additional text to make up the bulk of the card's content.",
-    },
-  ];
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    axios
+      .get("https://localhost:7279/api/Cars", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        console.log(response.data);
+        setData(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
@@ -138,24 +88,29 @@ const Feed = () => {
                     <div className="col-md-3" key={feed.id}>
                       <div className="card mb-4">
                         <div className="card-img-container text-center">
-                          <Link to="/details">
+                          <Link to={`/details/${feed.id}`}>
                             <img
-                              src={feed.image}
+                              src={feed.photo}
                               className="card-img-top card-img-custom"
-                              alt={feed.title}
+                              alt={feed.brand_name}
                             />
                           </Link>
                         </div>
 
                         <div className="card-body">
-                          <Link to="/details">
-                            <h5 className="card-title">{feed.title}</h5>
+                          <Link
+                            to={`/details/${feed.id}`}
+                            className="text-decoration-none"
+                          >
+                            <h5 className="card-title">
+                              {feed.brand} {feed.model}
+                            </h5>
                           </Link>
 
                           <p className="card-text small mb-1">
                             {feed.description}
                           </p>
-                          <p className="card-text mb-0">${feed.price}</p>
+                          <p className="card-text mb-0">${feed.rental_cost}</p>
                         </div>
                       </div>
                     </div>
