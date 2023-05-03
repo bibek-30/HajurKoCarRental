@@ -56,9 +56,18 @@ export default function UserTable(props) {
     <div className="d-flex justify-content-center align-items-center">
       <div className="d-flex justify-content-between align-items-center">
         <div>
-          <div className="d-flex">
+          <div className="d-flex justify-content-between">
             <h1>User Table</h1>
-            <button>Add user</button>
+            <button
+              style={{
+                backgroundColor: "#007bff",
+                color: "white",
+                border: "none",
+                padding: "8px 16px",
+              }}
+            >
+              Add user
+            </button>
           </div>
 
           <Table striped bordered hover>

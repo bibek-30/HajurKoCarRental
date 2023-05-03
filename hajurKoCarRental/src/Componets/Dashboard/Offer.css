@@ -1,0 +1,43 @@
+.offers {
+    margin: 20px;
+  }
+  
+  .offers h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+  
+  .offers table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .offers th {
+    text-align: left;
+    padding: 8px;
+    background-color: #f2f2f2;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .offers td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .offers .edit-btn,
+  .offers .delete-btn,
+  .offers .add-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    margin-right: 8px;
+    cursor: pointer;
+  }
+  
+  .offers .edit-btn:hover,
+  .offers .delete-btn:hover,
+  .offers .add-btn:hover {
+    background-color: #0056b3;
+  }
+  

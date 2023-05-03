@@ -15,6 +15,9 @@ import ChartComponent from "./Chart";
 import CarList from "./CarTable";
 import UserTable from "./UserTable";
 import RentalRequest from "./RentalRequest";
+import RentalHistory from "./RentalHistory";
+import Offers from "./Offers";
+import DamagedCars from "./Damaged";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -42,8 +45,8 @@ const Sidebar = () => {
     {
       key: "4",
       icon: <DollarCircleOutlined />,
-      label: "Payments",
-      content: "Payments",
+      label: "Offers",
+      content: <Offers />,
     },
     {
       key: "5",
@@ -55,7 +58,13 @@ const Sidebar = () => {
       key: "6",
       icon: <HistoryOutlined />,
       label: "Rental History",
-      content: "Rental history content",
+      content: <RentalHistory />,
+    },
+    {
+      key: "7",
+      icon: <DollarCircleOutlined />,
+      label: "Damage Records",
+      content: <DamagedCars />,
     },
   ];
 
