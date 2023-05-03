@@ -36,7 +36,7 @@ export default function Signin() {
             console.log(response);
           }
           if ((response.status === 200 && response.data.role === 0) || 1) {
-            // navigate("/side");
+            navigate("/side");
             console.log(response);
           }
 

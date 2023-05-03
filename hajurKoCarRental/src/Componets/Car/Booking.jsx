@@ -1,316 +1,116 @@
-// import { useState } from "react";
-// import { Formik, Form, Field, ErrorMessage } from "formik";
-// import * as Yup from "yup";
-
-// import { ToastContainer, toast } from "react-toastify";
-// import Khalti from "../Payment/KhaltiCOnfig";
-
-// function Booking() {
-//   const initialValues = {
-//     photos: [],
-//     startDate: "",
-//     endDate: "",
-//   };
-
-//   const validationSchema = Yup.object().shape({
-//     photos: Yup.array()
-//       .min(1, "Please upload at least one photo")
-//       .required("Photos are required"),
-//     startDate: Yup.date().required("Start date is required"),
-//     endDate: Yup.date().when(
-//       "startDate",
-//       (startDate, schema) =>
-//         startDate && schema.min(startDate, "End date must be after start date")
-//     ),
-//   });
-
-//   const handleSubmit = (values, { resetForm }) => {
-//     console.log(values);
-//     toast.success("Your Booking is Placed Succesfully!");
-//     resetForm();
-//   };
-
-//   const minDate = new Date().toISOString().slice(0, 10); // get current date in ISO format
-
-//   const handlePhotoChange = (event, setFieldValue) => {
-//     const files = Array.from(event.currentTarget.files);
-//     setFieldValue("photos", files);
-//   };
-
-//   return (
-//     <div className="booking-form">
-//       <ToastContainer position="top-right" />
-
-//       <Formik
-//         initialValues={initialValues}
-//         validationSchema={validationSchema}
-//         onSubmit={handleSubmit}
-//       >
-//         {({ values, errors, touched, setFieldValue }) => (
-//           <Form>
-//             <div className="form-group">
-//               <label htmlFor="photos">Photos</label>
-//               <input
-//                 type="file"
-//                 id="photos"
-//                 name="photos"
-//                 multiple
-//                 accept="image/*"
-//                 onChange={(event) => handlePhotoChange(event, setFieldValue)}
-//                 className={
-//                   "form-control" +
-//                   (errors.photos && touched.photos ? " is-invalid" : "")
-//                 }
-//               />
-//               <ErrorMessage
-//                 name="photos"
-//                 component="div"
-//                 className="invalid-feedback"
-//               />
-//               {errors.photos && touched.photos && (
-//                 <div className="alert alert-danger mt-3">{errors.photos}</div>
-//               )}
-//               {values.photos.length === 0 && (
-//                 <div className="alert alert-danger mt-3">Photo is required</div>
-//               )}
-//             </div>
-
-//             <div className="form-group">
-//               <label htmlFor="startDate">Start Date</label>
-//               <Field
-//                 type="date"
-//                 id="startDate"
-//                 name="startDate"
-//                 placeholder="Enter start date"
-//                 min={minDate}
-//                 className={
-//                   "form-control" +
-//                   (errors.startDate && touched.startDate ? " is-invalid" : "")
-//                 }
-//               />
-//               <ErrorMessage
-//                 name="startDate"
-//                 component="div"
-//                 className="invalid-feedback"
-//               />
-//               {!values.startDate && (
-//                 <div className="alert alert-danger mt-3">
-//                   Start date is required
-//                 </div>
-//               )}
-//             </div>
-
-//             {values.startDate && (
-//               <div className="form-group">
-//                 <label htmlFor="endDate">End Date</label>
-//                 <Field
-//                   type="date"
-//                   id="endDate"
-//                   name="endDate"
-//                   placeholder="Enter end date"
-//                   min={values.startDate}
-//                   className={
-//                     "form-control" +
-//                     (errors.endDate && touched.endDate ? " is-invalid" : "")
-//                   }
-//                 />
-//                 <ErrorMessage
-//                   name="endDate"
-//                   component="div"
-//                   className="invalid-feedback"
-//                 />
-//                 {!values.endDate && (
-//                   <div className="alert alert-danger mt-3">
-//                     End date is required
-//                   </div>
-//                 )}
-//               </div>
-//             )}
-
-//             <button type="submit" className="btn btn-primary mt-3">
-//               Book Now
-//             </button>
-//           </Form>
-//         )}
-//       </Formik>
-//     </div>
-//   );
-// }
-// export default Booking;
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
-import { ToastContainer, toast } from "react-toastify";
-import KhaltiCheckout from "khalti-checkout-web";
+const Booking = (props) => {
+  const [user, setUser] = useState(null);
+  const [redirect, setRedirect] = useState(false);
 
-function Booking() {
+  useEffect(() => {
+    const userString = localStorage.getItem("user");
+    if (userString) {
+      const user = JSON.parse(userString);
+      setUser(user);
+    } else {
+      setRedirect(true);
+    }
+  }, []);
+
+  if (redirect) {
+    return <Link to="/login" />;
+  }
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
   const initialValues = {
-    photos: [],
-    startDate: "",
-    endDate: "",
+    discount: 0,
+    rental_amount: props.cost,
+    start_date: "",
+    end_date: "",
+    rental_status: 1, //pending
+    users_id: user.id,
+    cars_id: props.id,
   };
 
   const validationSchema = Yup.object().shape({
-    photos: Yup.array()
-      .min(1, "Please upload at least one photo")
-      .required("Photos are required"),
-    startDate: Yup.date().required("Start date is required"),
-    endDate: Yup.date().when(
-      "startDate",
-      (startDate, schema) =>
-        startDate && schema.min(startDate, "End date must be after start date")
-    ),
+    start_date: Yup.date()
+      .min(new Date(), "Start date must be today or later")
+      .required("Start date is required"),
+    end_date: Yup.date()
+      .min(Yup.ref("start_date"), "End date must be after start date")
+      .required("End date is required"),
+    cars_id: Yup.number().required("Car selection is required"),
   });
 
-  const handleSubmit = (values, { resetForm }) => {
-    console.log(values);
+  const onSubmit = async (values, { setSubmitting, resetForm }) => {
+    try {
+      const apiUrl = "https://localhost:7279/api/Rental/booking";
+      axios
+        .post(apiUrl, values)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          alert(error.response.data);
+        });
 
-    // Khalti payment
-    const config = {
-      publicKey: "test_public_key_dc74e0fd57cb46cd938e0a2aee986ac9",
-      productIdentity: "1234567890",
-      productName: "Test Product",
-      productUrl: "http://example.com/test-product",
-      eventHandler: {
-        onSuccess(payload) {
-          console.log(payload);
-          toast.success(
-            "Your Booking is Placed Successfully and Payment is Completed!"
-          );
-          resetForm();
-        },
-        onError(error) {
-          console.log(error);
-          toast.error("Payment Error! Please try again.");
-        },
-        onClose() {
-          console.log("Payment closed");
-          toast.info("Payment Closed! Please try again.");
-        },
-      },
-    };
-
-    const checkout = new KhaltiCheckout(config);
-
-    checkout.show({
-      amount: 1000, // change the amount as per your requirement
-      mobile: "+9779800000000", // change the mobile number as per your requirement
-      email: "test@example.com", // change the email address as per your requirement
-    });
-  };
-
-  const minDate = new Date().toISOString().slice(0, 10); // get current date in ISO format
-
-  const handlePhotoChange = (event, setFieldValue) => {
-    const files = Array.from(event.currentTarget.files);
-    setFieldValue("photos", files);
+      //   const response = await axios.post(
+      //     "https://localhost:7279/api/Rental/booking",
+      //     values
+      //   );
+      //   console.log("Booking successful", response.data);
+      //   resetForm();
+      //   alert("Booking successful!");
+      // } catch (error) {
+      //   console.error("Booking failed", error);
+      //   alert("Booking failed. Please try again later.");
+      //   console.log(response.data);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <div className="booking-form">
-      <ToastContainer position="top-right" />
-
+    <div>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+        onSubmit={onSubmit}
       >
-        {({ values, errors, touched, setFieldValue }) => (
+        {({ isSubmitting }) => (
           <Form>
-            <div className="form-group">
-              <label htmlFor="photos">Photos</label>
-              <input
-                type="file"
-                id="photos"
-                name="photos"
-                multiple
-                accept="image/*"
-                onChange={(event) => handlePhotoChange(event, setFieldValue)}
-                className={
-                  "form-control" +
-                  (errors.photos && touched.photos ? " is-invalid" : "")
-                }
-              />
-              <ErrorMessage
-                name="photos"
-                component="div"
-                className="invalid-feedback"
-              />
-              {errors.photos && touched.photos && (
-                <div className="alert alert-danger mt-3">{errors.photos}</div>
-              )}
-              {values.photos.length === 0 && (
-                <div className="alert alert-danger mt-3">Photo is required</div>
-              )}
+            <div>
+              <label htmlFor="start_date">Start date:</label>
+              <Field type="date" name="start_date" />
+              <ErrorMessage name="start_date" />
             </div>
-
-            <div className="form-group">
-              <label htmlFor="startDate">Start Date</label>
-              <Field
-                type="date"
-                id="startDate"
-                name="startDate"
-                placeholder="Enter start date"
-                min={minDate}
-                className={
-                  "form-control" +
-                  (errors.startDate && touched.startDate ? " is-invalid" : "")
-                }
-              />
-              <ErrorMessage
-                name="startDate"
-                component="div"
-                className="invalid-feedback"
-              />
-              {!values.startDate && (
-                <div className="alert alert-danger mt-3">
-                  Start date is required
-                </div>
-              )}
+            <div>
+              <label htmlFor="end_date">End date:</label>
+              <Field type="date" name="end_date" />
+              <ErrorMessage name="end_date" />
             </div>
-
-            {values.startDate && (
-              <div className="form-group">
-                <label htmlFor="endDate">End Date</label>
-                <Field
-                  type="date"
-                  id="endDate"
-                  name="endDate"
-                  placeholder="Enter end date"
-                  min={values.startDate}
-                  className={
-                    "form-control" +
-                    (errors.endDate && touched.endDate ? " is-invalid" : "")
-                  }
-                />
-                <ErrorMessage
-                  name="endDate"
-                  component="div"
-                  className="invalid-feedback"
-                />
-                {!values.endDate && (
-                  <div className="alert alert-danger mt-3">
-                    End date is required
-                  </div>
-                )}
-              </div>
-            )}
-
-            <button type="submit" className="btn btn-primary mt-3">
-              Book Now
+            {/* <div>
+              <label htmlFor="cars_id">Select a car:</label>
+              <Field as="select" name="cars_id">
+                <option value="">--Select a car--</option>
+                <option value="1">Car 1</option>
+                <option value="2">Car 2</option>
+                <option value="3">Car 3</option>
+              </Field>
+              <ErrorMessage name="cars_id" />
+            </div> */}
+            <button type="submit" disabled={isSubmitting}>
+              Submit
             </button>
-
-            <div className="payment-options">
-              <button onClick={handleSubmit} className="btn btn-success">
-                Pay with Khalti
-              </button>
-            </div>
           </Form>
         )}
       </Formik>
     </div>
   );
-}
+};
+
 export default Booking;

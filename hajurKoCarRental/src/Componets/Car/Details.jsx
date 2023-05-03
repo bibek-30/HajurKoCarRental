@@ -117,7 +117,7 @@ const CarDetails = () => {
                     >
                       X
                     </button>
-                    <Booking />
+                    <Booking cost={carDetails.rental_cost} id={carDetails.id} />
                   </div>
                 </div>
               )}

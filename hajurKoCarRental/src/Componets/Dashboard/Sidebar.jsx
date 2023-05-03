@@ -11,9 +11,10 @@ import {
 
 import { Layout, Menu, theme } from "antd";
 import React, { useState } from "react";
-import Signin from "../Login";
 import ChartComponent from "./Chart";
-import Count from "./Count";
+import CarList from "./CarTable";
+import UserTable from "./UserTable";
+import RentalRequest from "./RentalRequest";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -35,20 +36,20 @@ const Sidebar = () => {
       key: "2",
       icon: <TeamOutlined />,
       label: "Users",
-      content: <Count />,
+      content: <UserTable />,
     },
-    { key: "3", icon: <CarOutlined />, label: "Cars", content: "Cars content" },
+    { key: "3", icon: <CarOutlined />, label: "Cars", content: <CarList /> },
     {
       key: "4",
       icon: <DollarCircleOutlined />,
       label: "Payments",
-      content: "Payments content",
+      content: "Payments",
     },
     {
       key: "5",
       icon: <UsergroupAddOutlined />,
-      label: "Customers",
-      content: "Customers content",
+      label: "Rental Request",
+      content: <RentalRequest />,
     },
     {
       key: "6",
