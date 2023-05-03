@@ -18,16 +18,31 @@ const { Search } = Input;
 const defaultCars = [
   {
     id: 1,
-    brand: "Toyota",
-    model: "Camry",
+    brand: "Tesla",
+    model: "Tesla S",
     color: "White",
     year: 2021,
-    registration_number: "AB-1234",
+    registration_number: "1234",
     avaibility_status: "Active",
     photo: "image.jpg",
     rental_cost: 2000,
     mileage: 100,
-    description: "gsbfjkblkns",
+    description:
+      "Tesla is accelerating the world's transition to sustainable energy with electric cars, solar and integrated renewable energy solutions for homes and ",
+  },
+  {
+    id: 1,
+    brand: "Honda",
+    model: "Honda SCk",
+    color: "White",
+    year: 2021,
+    registration_number: "1234",
+    avaibility_status: "Active",
+    photo: "image.jpg",
+    rental_cost: 2000,
+    mileage: 100,
+    description:
+      "Tesla is accelerating the world's transition to sustainable energy with electric cars, solar and integrated renewable energy solutions for homes and ",
   },
 ];
 
