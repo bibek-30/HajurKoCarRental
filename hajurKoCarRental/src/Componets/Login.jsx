@@ -29,9 +29,17 @@ export default function Signin() {
       axios
         .post(apiUrl, values)
         .then((response) => {
-          if (response.status === 200) {
+          localStorage.setItem("token", response.data.jwtToken);
+          localStorage.setItem("user", JSON.stringify(response.data));
+          if (response.status === 200 && response.data.role === 2) {
             navigate("/");
+            console.log(response);
           }
+          if ((response.status === 200 && response.data.role === 0) || 1) {
+            // navigate("/side");
+            console.log(response);
+          }
+
           console.log(response.data);
         })
         .catch((error) => {

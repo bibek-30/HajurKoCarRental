@@ -8,6 +8,8 @@ import Booking from "./Componets/Car/Booking";
 import Sidebar from "./Componets/Dashboard/Sidebar";
 import Registration from "./Componets/Registration";
 import Signin from "./Componets/Login";
+import Khalti from "./Componets/Payment/KhaltiCOnfig";
+import Addcar from "./Componets/Car/AddCar";
 
 const App = () => {
   return (
@@ -20,6 +22,8 @@ const App = () => {
         <Route path="/side" element={<Sidebar />} />
         <Route path="/register" element={<Registration />} />
         <Route path="/login" element={<Signin />} />
+        <Route path="/payment" element={<Khalti />} />
+        <Route path="/addcar" element={<Addcar />} />
       </Routes>
     </BrowserRouter>
   );

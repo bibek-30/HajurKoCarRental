@@ -17,7 +17,7 @@ export default function Registration() {
       date_of_birth: "",
       profile_picture: "",
       document: "",
-      role: 0,
+      role: 2,
       address: "",
       phone_number: "",
       email_address: "",
@@ -54,7 +54,7 @@ export default function Registration() {
       formData.append("date_of_birth", values.date_of_birth);
       formData.append("profile_picture", values.profile_picture);
       formData.append("document", values.document);
-      formData.append("role", 0);
+      formData.append("role", 2);
       formData.append("address", values.address);
       formData.append("phone_number", values.phone_number);
       formData.append("email_address", values.email_address);
