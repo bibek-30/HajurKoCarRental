@@ -2,11 +2,14 @@ import { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Booking = (props) => {
   const [user, setUser] = useState(null);
   const [redirect, setRedirect] = useState(false);
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const userString = localStorage.getItem("user");
@@ -17,6 +20,12 @@ const Booking = (props) => {
       setRedirect(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, [token]);
 
   if (redirect) {
     return <Link to="/login" />;
@@ -31,7 +40,7 @@ const Booking = (props) => {
     rental_amount: props.cost,
     start_date: "",
     end_date: "",
-    rental_status: 1, //pending
+    rental_status: 1,
     users_id: user.id,
     cars_id: props.id,
   };
@@ -57,23 +66,10 @@ const Booking = (props) => {
         .catch((error) => {
           alert(error.response.data);
         });
-
-      //   const response = await axios.post(
-      //     "https://localhost:7279/api/Rental/booking",
-      //     values
-      //   );
-      //   console.log("Booking successful", response.data);
-      //   resetForm();
-      //   alert("Booking successful!");
-      // } catch (error) {
-      //   console.error("Booking failed", error);
-      //   alert("Booking failed. Please try again later.");
-      //   console.log(response.data);
     } finally {
       setSubmitting(false);
     }
   };
-
   return (
     <div>
       <Formik
@@ -93,16 +89,8 @@ const Booking = (props) => {
               <Field type="date" name="end_date" />
               <ErrorMessage name="end_date" />
             </div>
-            {/* <div>
-              <label htmlFor="cars_id">Select a car:</label>
-              <Field as="select" name="cars_id">
-                <option value="">--Select a car--</option>
-                <option value="1">Car 1</option>
-                <option value="2">Car 2</option>
-                <option value="3">Car 3</option>
-              </Field>
-              <ErrorMessage name="cars_id" />
-            </div> */}
+            <button>Pay With Khalti</button>
+
             <button type="submit" disabled={isSubmitting}>
               Submit
             </button>

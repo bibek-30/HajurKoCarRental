@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -9,7 +9,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function Signin() {
   const [formState, setFormState] = useState(true);
+
+  const [redirectTo, setRedirectTo] = useState(null);
+
   const navigate = useNavigate();
+  const location = useLocation();
 
   const formik = useFormik({
     initialValues: {
@@ -32,15 +36,15 @@ export default function Signin() {
           localStorage.setItem("token", response.data.jwtToken);
           localStorage.setItem("user", JSON.stringify(response.data));
           if (response.status === 200 && response.data.role === 2) {
-            navigate("/");
-            console.log(response);
+            // navigate(location.state?.from || "/");
+            navigate(-1);
           }
-          if ((response.status === 200 && response.data.role === 0) || 1) {
+          if (
+            response.status === 200 &&
+            (response.data.role === 0 || response.data.role === 1)
+          ) {
             navigate("/side");
-            console.log(response);
           }
-
-          console.log(response.data);
         })
         .catch((error) => {
           console.error(error);

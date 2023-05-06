@@ -11,7 +11,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Input, Space } from "antd";
 import { Modal } from "react-bootstrap";
-import CloseButton from "react-bootstrap/CloseButton";
 
 const { Search } = Input;
 

@@ -9,23 +9,19 @@ import "./Details.css";
 import Booking from "./Booking";
 
 const CarDetails = () => {
-  const { id } = useParams();
-
   const [carDetails, setCarDetails] = useState(null);
   const [showTerms, setShowTerms] = useState(false);
   const [showBooking, setShowBooking] = useState(false);
-
+  const { id } = useParams();
+  const numValue = parseInt(id);
+  console.log(numValue);
   const toggleBooking = () => {
     setShowBooking(!showBooking);
   };
 
   useEffect(() => {
     axios
-      .get("https://localhost:7279/api/Cars/2", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      .get(`https://localhost:7279/api/Cars/${numValue}`)
       .then((response) => {
         console.log(response);
         console.log(response.data);
@@ -34,7 +30,7 @@ const CarDetails = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [id]);
 
   if (!carDetails) {
     return <div>Loading car details...</div>;
@@ -51,14 +47,14 @@ const CarDetails = () => {
   return (
     <div className="bg-dark">
       <Navbar />
-      <div className="container my-5 car-details-container">
+      <div className="p-2 my-5 car-details-container">
         <div className="row">
           <div className="col-md-6">
             <Carousel controls={false}>
               <img
                 className="d-block w-100"
                 src={carDetails.photo}
-                alt={carDetails.make + " " + carDetails.model}
+                alt={carDetails.brand + " " + carDetails.model}
               />
             </Carousel>
 
@@ -128,7 +124,7 @@ const CarDetails = () => {
             <ul className="list-group list-group-flush">
               <li className="list-group-item car-details-item">
                 <h1 className="mb-4 car-details-heading">
-                  {carDetails.make} {carDetails.model}
+                  {carDetails.brand} {carDetails.model}
                 </h1>
                 <p className="car-details-description">
                   {carDetails.description}
