@@ -95,7 +95,7 @@ const Feed = () => {
                       <div className="card-img-container text-center">
                         <Link to={`/details/${feed.id}`}>
                           <img
-                            src={feed.photo}
+                            src={`https://localhost:7279/\\Upload\\${feed.photo}`}
                             className="card-img-top card-img-custom"
                             alt={feed.brand_name}
                           />
